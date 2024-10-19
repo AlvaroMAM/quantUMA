@@ -4,10 +4,7 @@ Nota: Se han realizado todos los ejercicios salvo los opcionales
 
 nb_01 -->
 nb_02 -->
-nb_03 -->
 nb_04 -->
 nb_05 -->
-nb_06 -->
-nb_07 -->
-nb_08 --> 
+
 
