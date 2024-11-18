@@ -1,10 +1,12 @@
 Apellidos, Nombre: Aparicio Morales, Álvaro Manuel
 
-Nota: Se han realizado todos los ejercicios salvo los opcionales
+Se han realizado todos los ejercicios básicos de los siguientes notebooks:
 
-nb_01 -->
-nb_02 -->
-nb_04 -->
-nb_05 -->
+- nb01 (nº de ejercicios básicos 2)
+- nb02 (nº de ejercicios básicos 3)
+- nb04 (nº de ejercicios básicos 4)
+- nb05 (nº de ejercicios básicos 1)
+
+
 
 
