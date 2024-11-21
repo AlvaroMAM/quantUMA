@@ -1,0 +1,28 @@
+<!--
+
+Alumno: Álvaro Manuel Aparicio Morales
+I CERTIFICADO DE EXTENSIÓN UNIVERSITARIA EN COMPUTACIÓN CUÁNTICA 
+Curso : 2024-25
+Módulo 4 - Software Cuántico
+
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Phase Generator</title>
+</head>
+<body>    
+    <h1>Indica el tamaño</h1>
+    <form action="/quantumphasegenerator" method="post">
+        <label for="size">Tamaño:</label>
+        <input type="number" id="size" name="size" required max="20" min="1">
+        <button type="submit">Enviar</button>
+    </form>
+    {% if resultado %}
+       Palabras generadas:  <p style="color: green;">{{ resultado }}</p>
+    {% endif %}
+</body>
+</html>

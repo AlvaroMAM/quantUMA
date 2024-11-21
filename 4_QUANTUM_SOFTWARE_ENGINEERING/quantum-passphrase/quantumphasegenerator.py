@@ -1,13 +1,19 @@
-from flask import Response, request, render_template, jsonify, redirect, url_for
+"""
+Alumno: Álvaro Manuel Aparicio Morales
+I CERTIFICADO DE EXTENSIÓN UNIVERSITARIA EN COMPUTACIÓN CUÁNTICA 
+Curso : 2024-25
+Módulo 4 - Software Cuántico
+"""
+
+from flask import Flask, Response, request, render_template, jsonify, redirect, url_for
 from braket.circuits import Circuit
-from braket.aws import AwsDevice
 from braket.devices.local_simulator import LocalSimulator
 import json
 import requests
 
 app = Flask(__name__)
 
-CLIENT_URL = http://127.0.0.1:5555
+CLIENT_URL = "http://127.0.0.1:5555"
 
 DATA_MUSE_API = "https://api.datamuse.com/words"
 
@@ -15,24 +21,24 @@ DATA_MUSE_API = "https://api.datamuse.com/words"
 def alive ():
     return Response("It's alive")
 
-@app.route('/quantumphasegenerator', method=['POST'])
+@app.route('/generate-random-bits', methods=['POST'])
 def quantumphasegenerator():
-
+    print("LLEGA PETICION AL SERVER")
     if request.method == 'POST':
+        print("ES POST")
         data_recieved = request.get_json()
-    
-        if not data_recieved or 'size' not in data_recieved:
-            return jsonify({"error": "Falta el parámetro 'size' en el cuerpo de la solicitud"}), 400
+        print(data_recieved)
+        if not data_recieved or 'length' not in data_recieved:
+            return jsonify({"error": "Length missing"}), 400
         else:
-
-            length = int(data_recieved['size'])
-            #Obtención de resultados de braket
+            
+            length = int(data_recieved['length'])
             device = LocalSimulator()
-            #device = AwsDevice()
             circuit = Circuit().h(range(length))
             braket_result = device.run(circuit, shots=100).result()
             measurement = list(braket_result.measurements[0])
             generated_string = ''.join(map(str, measurement))
+            print(generated_string)
             word_binary_index = []
             word = ""
             for bit in generated_string:
@@ -41,22 +47,34 @@ def quantumphasegenerator():
                 else:
                     word_binary_index.append(word)
                     word = "" + bit # Iniciamos nueva palabra
-            print(word_binary_index)
+            word_binary_index.append(word) # Añadimos el residuo
             #Request a data-muse
-            data_muse_request = {
+            params = {
                 'rel_jja' : 'common',
-                'max' : 128
+                'max' : 256
             }
-            response = requests.post(DATA_MUSE_API, json=data_muse_request)
+            response = requests.get(DATA_MUSE_API, params=params)
             if response.status_code == 200:
-                muse_word = response.json()
+                print("DATA MUSE WORDS")
+                muse_words = response.json()
+                print(len(muse_words))
+                print(muse_words)
                 generated_phrase = ""
                 for binary_index in word_binary_index:
                     # tranformación de binario a decimal
                     decimal_index = int(binary_index,2)
+                    if decimal_index >=len(muse_words):
+                        decimal_index = decimal_index % len(muse_words)
                     # tomo palabra del índice
-                    generated_phrase = generated_phrase + muse_word[decimal_index]['word']
-                return generated_phrase
+                    print(decimal_index)
+                    muse_word = muse_words[decimal_index]
+                    print(muse_word)
+                    generated_phrase = generated_phrase + " " + muse_word['word']
+                print(generated_phrase)
+                return jsonify({"result" : generated_phrase})
+            else:
+                print(response.json())
+                return jsonify({"error": "DATA MUSE PROBLEM"}), 400
     else:
         return jsonify({"error": "WRONG REQUEST"}), 400
 
